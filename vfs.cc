@@ -1,6 +1,8 @@
 #include <glib.h>
 #include <cstdlib>
 
+#define WANT_VFS_STDIO_COMPAT
+
 #include <libaudcore/plugin.h>
 
 #include "plugin.h"
@@ -45,7 +47,7 @@ static long psf_file_ftell( void * handle )
     else return 0;
 }
 
-const psf_file_callbacks psf_file_system =
+static const psf_file_callbacks psf_file_system =
 {
     "\\/|:",
     NULL,
