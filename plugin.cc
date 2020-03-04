@@ -358,7 +358,7 @@ static bool read_info(const char * filename, Tuple & tuple) {
     memset(&info_state, 0, sizeof(info_state));
 
     int version = psf_load_vfs( filename, 0, 0, 0, psf_info_meta, &info_state, 0, psf_error_log, 0);
-    if (!version <= 0) return false;
+    if (version <= 0) return false;
 
     //todo apply_config
     int output_channels = 2;
