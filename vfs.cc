@@ -27,7 +27,7 @@ static size_t psf_file_fread( void * buffer, size_t size, size_t count, void * h
 static int psf_file_fseek( void * handle, int64_t offset, int whence )
 {
     VFSFile *vfsFile = (VFSFile *)handle;
-    if (vfsFile) return vfsFile->fseek( offset, (VFSSeekType) whence );
+    if (vfsFile) return vfsFile->fseek( offset, to_vfs_seek_type(whence) );
     else return -1;
 }
 
