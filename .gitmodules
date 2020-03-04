@@ -1,0 +1,21 @@
+[submodule "Highly_Experimental"]
+	path = Highly_Experimental
+	url = https://g.losno.co/chris/Highly_Experimental.git
+[submodule "Highly_Quixotic"]
+	path = Highly_Quixotic
+	url = https://g.losno.co/chris/Highly_Quixotic.git
+[submodule "Highly_Theoretical"]
+	path = Highly_Theoretical
+	url = https://g.losno.co/chris/Highly_Theoretical.git
+[submodule "lazyusf2"]
+	path = lazyusf2
+	url = https://g.losno.co/chris/lazyusf2.git
+[submodule "mGBA"]
+	path = mGBA
+	url = https://g.losno.co/chris/mgba.git
+[submodule "psflib"]
+	path = psflib
+	url = https://g.losno.co/chris/psflib.git
+[submodule "vio2sf"]
+	path = vio2sf
+	url = https://g.losno.co/chris/vio2sf.git
