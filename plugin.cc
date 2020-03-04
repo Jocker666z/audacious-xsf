@@ -139,7 +139,7 @@ get_srate(int version) {
     switch (version)
     {
         case 1: case 0x11: case 0x12: case 0x21:
-        case 0x24: case 0x25:
+        case 0x24:
             return 44100;
 
         case 2:
@@ -350,6 +350,21 @@ psf_error_log(void * unused, const char * message) {
     AUDINFO("%s\n", message);
 }
 
+static const char *
+get_codec(int version) {
+    switch (version) {
+        case 0x01: return "PSF";
+        case 0x02: return "PSF2";
+        case 0x11: return "SSF";
+        case 0x12: return "DSF";
+        case 0x21: return "USF";
+        case 0x22: return "GSF";
+        case 0x24: return "2SF";
+        case 0x41: return "QSF";
+        default: return "xsf";
+    }
+}
+
 // internal helper, called every time user adds a new file to playlist
 static bool read_info(const char * filename, Tuple & tuple) {
     AUDINFO("read file=%s\n", filename);
@@ -376,16 +391,39 @@ static bool read_info(const char * filename, Tuple & tuple) {
     tuple.set_int(Tuple::Bitrate, bitrate); //in kb/s
     tuple.set_int(Tuple::Length, ms);
 
-    tuple.set_str(Tuple::Codec, "xsf");
+    tuple.set_str(Tuple::Codec, get_codec(version));
 
     struct psf_tag * tag = info_state.tags;
     while ( tag ) {
-        if ( !strcasecmp( tag->name, "title" ) )
+        if ( !strncasecmp( tag->name, "replaygain_", strlen("replaygain_") ) ) {
+            bool album = !strncasecmp( tag->name + strlen("replaygain_"), "album_", strlen("album_") );
+            bool track = !strncasecmp( tag->name + strlen("replaygain_"), "track_", strlen("track_") );
+            if ( album || track ) {
+                bool gain = !strcasecmp( tag->name + strlen("replaygain_track_"), "gain");
+                bool peak = !strcasecmp( tag->name + strlen("replaygain_track_"), "peak");
+                if ( gain || peak ) {
+                    Tuple::Field field, unit_field;
+                    if (album) field = gain ? Tuple::AlbumGain : Tuple::AlbumPeak;
+                    else field = gain ? Tuple::TrackGain : Tuple::TrackPeak;
+                    unit_field = gain ? Tuple::GainDivisor : Tuple::PeakDivisor;
+                    tuple.set_gain (field, unit_field, tag->value);
+                }
+            }
+        }
+        else if ( !strcasecmp( tag->name, "title" ) )
             tuple.set_str (Tuple::Title, tag->value);
         else if ( !strcasecmp( tag->name, "artist" ) )
             tuple.set_str (Tuple::Artist, tag->value);
         else if ( !strcasecmp( tag->name, "album" ) )
             tuple.set_str (Tuple::Album, tag->value);
+        else if ( !strcasecmp( tag->name, "date" ) )
+            tuple.set_str (Tuple::Date, tag->value);
+        else if ( !strcasecmp( tag->name, "genre" ) )
+            tuple.set_str (Tuple::Genre, tag->value);
+        else if ( !strcasecmp( tag->name, "comment" ) )
+            tuple.set_str (Tuple::Comment, tag->value);
+        else if ( !strcasecmp( tag->name, "track" ) )
+            tuple.set_int (Tuple::Track, atoi(tag->value));
         tag = tag->next;
     }
 
