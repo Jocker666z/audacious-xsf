@@ -353,15 +353,15 @@ psf_error_log(void * unused, const char * message) {
 static const char *
 get_codec(int version) {
     switch (version) {
-        case 0x01: return "PSF";
-        case 0x02: return "PSF2";
-        case 0x11: return "SSF";
-        case 0x12: return "DSF";
-        case 0x21: return "USF";
-        case 0x22: return "GSF";
-        case 0x24: return "2SF";
-        case 0x41: return "QSF";
-        default: return "xsf";
+        case 0x01: return "Sony Playstation Audio";
+        case 0x02: return "Sony Playstation 2 Audio";
+        case 0x11: return "Sega Saturn Audio";
+        case 0x12: return "Sega Dreamcast Audio";
+        case 0x21: return "Nintendo 64 Audio";
+        case 0x22: return "Nintendo GBA Audio";
+        case 0x24: return "Nintendo DS Audio";
+        case 0x41: return "QSound Audio";
+        default: return "Unknown xSF Audio";
     }
 }
 
@@ -392,6 +392,7 @@ static bool read_info(const char * filename, Tuple & tuple) {
     tuple.set_int(Tuple::Length, ms);
 
     tuple.set_str(Tuple::Codec, get_codec(version));
+    tuple.set_str(Tuple::Quality, N_("sequenced"));
 
     struct psf_tag * tag = info_state.tags;
     while ( tag ) {
@@ -420,6 +421,8 @@ static bool read_info(const char * filename, Tuple & tuple) {
             tuple.set_str (Tuple::Date, tag->value);
         else if ( !strcasecmp( tag->name, "genre" ) )
             tuple.set_str (Tuple::Genre, tag->value);
+        else if ( !strcasecmp( tag->name, "copyright" ) )
+            tuple.set_str (Tuple::Copyright, tag->value);
         else if ( !strcasecmp( tag->name, "comment" ) )
             tuple.set_str (Tuple::Comment, tag->value);
         else if ( !strcasecmp( tag->name, "track" ) )
