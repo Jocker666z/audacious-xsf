@@ -1,7 +1,7 @@
 PLUGIN = xsf.so
 
 CFLAGS = -O2 -fPIC -c
-LDFLAGS = -fPIC -shared /usr/lib/libmgba.so.0.9 -lz
+LDFLAGS = -fPIC -shared /usr/lib/x86_64-linux-gnu/libmgba.so -lz
 
 PSFLIB_OBJS    = psflib/psflib.o psflib/psf2fs.o
 
@@ -70,7 +70,7 @@ plugin.o: plugin.cc
 	$(CXX) $(CFLAGS) -DEMU_COMPILE -DEMU_LITTLE_ENDIAN -DMGBA_STANDALONE -ImGBA/include $< -o $@
 
 vfs.o: vfs.cc
-	$(CXX) $(CFLAGS) -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include $< -o $@
+	$(CXX) $(CFLAGS) -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include $< -o $@
 
 $(HE_DIR)/%.o: $(HE_DIR)/%.c
 	$(CC) $(CFLAGS) -DEMU_COMPILE -DEMU_LITTLE_ENDIAN $< -o $@

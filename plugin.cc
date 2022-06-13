@@ -1331,7 +1331,7 @@ xsf_open(const char * uri) {
 static int
 xsf_reset() {
     if (file_path) {
-        char * path = file_path;
+        char * path = strdup(file_path);
         int ret = xsf_open(path);
         free(path);
         return ret;
